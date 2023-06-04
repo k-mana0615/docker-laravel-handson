@@ -1,9 +1,16 @@
 version: "3.9"
+
 services:
   app:
     build:
       context: ./infra/php
       dockerfile: Dockerfile
+    volumes:
+      - ./src:/data
+      - ./infra/php/php.ini:/usr/local/etc/php/php.ini
+    environment:
+      - COMPOSER_ALLOW_SUPERUSER=1
+      - COMPOSER_HOME=/composer
     command: sh -c "chmod -R 777 storage bootstrap/cache && composer install && cp .env.example .env && php artisan key:generate && php artisan storage:link && php-fpm"
 
   web:
